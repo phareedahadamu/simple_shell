@@ -59,14 +59,12 @@ int (*get_func(char *token))(char *args, char **environ)
 int change_dir(char *args, char **environ)
 {
 	int len;
-	char cwd[PATH_MAX], *home, *token;
+	char cwd[PATH_MAX], *home;
 
 	if (args == NULL)
 	{
 		home = _getenv("HOME", environ);
-		token = strtok(home, "=");
-		token = strtok(NULL, "\n");
-		chdir(token);
+		chdir(home);
 		return (0);
 	}
 	if (_strcmp(args, "-") == 0)
@@ -80,6 +78,7 @@ int change_dir(char *args, char **environ)
 		}
 		cwd[len - 1] = '\0';
 		chdir(cwd);
+		_pwd(args, environ);
 		return (0);
 	}
 	if (chdir(args) == -1)
