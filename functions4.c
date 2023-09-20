@@ -43,3 +43,39 @@ char *_strdup(char *str)
 	str1[i] = '\0';
 	return (str1);
 }
+
+/**
+ * free_args - A function that frees args
+ * @args: The arguments to be freed
+ * @lp1: The line pointer to be freed
+ */
+void free_args(char **args, char *lp1)
+{
+	int i = 0;
+
+	free(lp1);
+	while (args[i] != NULL)
+	{
+		free(args[i]);
+		i++;
+	}
+	free(args);
+	fflush(stdout);
+}
+
+/**
+ * print_err - A function that prints error message to stdout
+ * @args: Arguments
+ * Return: The error message to be freed
+ */
+char *print_err(char **args)
+{
+	char *msg = NULL, *pre = "./hsh: 1: ", *post = ": not found\n";
+
+	msg = malloc(sizeof(char) * (_strlen(args[0]) + 23));
+	_strcpy(pre, msg);
+	_strcat(msg, args[0]);
+	_strcat(msg, post);
+	write(2, msg, (_strlen(msg)));
+	return (msg);
+}

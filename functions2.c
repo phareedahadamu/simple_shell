@@ -54,39 +54,20 @@ char **tokenize(char *lp2, int count, char **args)
  */
 int _execve(char **args, char **environ, char *lp1)
 {
-	pid_t fid;
-	char *abs_path = NULL;
-	int status, i;
+	pid_t fid = fork();
+	char *abs_path = NULL, *msg = NULL;
+	int status;
 
-	fid = fork();
 	if (fid == -1)
-	{
-		perror("Fork error");
 		return (status);
-	}
 	if (fid == 0)
 	{
 		abs_path = get_abs_path(args[0], environ);
-
 		if (abs_path == NULL)
 		{
-			char *msg = NULL, *pre = "./hsh: 1: ", *post = ": not found\n";
-
-			msg = malloc(sizeof(char) * (_strlen(args[0]) + 23));
-			_strcpy(pre, msg);
-			_strcat(msg, args[0]);
-			_strcat(msg, post);
-			write(2, msg, (_strlen(msg)));
-			free(lp1);
+			msg = print_err(args);
 			free(msg);
-			i = 0;
-			while (args[i] != NULL)
-			{
-				free(args[i]);
-				i++;
-			}
-			free(args);
-			fflush(stdout);
+			free_args(args, lp1);
 			exit(127);
 		}
 		else
@@ -94,29 +75,13 @@ int _execve(char **args, char **environ, char *lp1)
 			if (access(abs_path, F_OK) == 0)
 			{
 				execve(abs_path, args, environ);
-				free(lp1);
-				i = 0;
-				while (args[i] != NULL)
-				{
-					free(args[i]);
-					i++;
-				}
-				free(args);
-				fflush(stdout);
+				free_args(args, lp1);
 				exit(0);
 			}
 			else
 			{
 				perror("Access error");
-				free(lp1);
-				i = 0;
-				while (args[i] != NULL)
-				{
-					free(args[i]);
-					i++;
-				}
-				free(args);
-				fflush(stdout);
+				free_args(args, lp1);
 				exit(2);
 			}
 		}
