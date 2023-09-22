@@ -11,7 +11,7 @@
 int main(__attribute__((unused)) int argc, char **argv, char **environ)
 {
 	char *lp1 = NULL, *lp2 = NULL;
-	int i = 0, count = 0, status = 0;
+	int count = 0, status = 0;
 	ssize_t read_val;
 	size_t n = 0;
 
@@ -33,6 +33,11 @@ int main(__attribute__((unused)) int argc, char **argv, char **environ)
 		}
 		lp2 = _strdup(lp1);
 		count = count_tokens(lp1);
+		if (count == 0)
+		{
+			free(lp2);
+			continue;
+		}
 		argv = malloc(sizeof(char *) * (count + 1));
 		argv = tokenize(lp2, count, argv);
 		free(lp2);
@@ -40,13 +45,7 @@ int main(__attribute__((unused)) int argc, char **argv, char **environ)
 			status = get_func(argv[0])(argv[1], environ);
 		else
 			status = _execve(argv, environ, lp1);
-		i = 0;
-		while (argv[i] != NULL)
-		{
-			free(argv[i]);
-			i++;
-		}
-		free(argv);
+		freeargs(argv);
 	}
 	free(lp1);
 	exit(status);

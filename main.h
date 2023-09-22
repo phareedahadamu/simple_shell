@@ -42,5 +42,6 @@ int count_tokens(char *lp);
 char *_strdup(char *str);
 void free_args(char **args, char *lp1);
 char *print_err(char **args);
+void freeargs(char **argv);
 
 #endif

@@ -79,3 +79,19 @@ char *print_err(char **args)
 	write(2, msg, (_strlen(msg)));
 	return (msg);
 }
+
+/**
+ * freeargs - A function that frees args
+ * @argv: The arguments to be freed
+ */
+void freeargs(char **argv)
+{
+	int i = 0;
+
+	while (argv[i] != NULL)
+	{
+		free(argv[i]);
+		i++;
+	}
+	free(argv);
+}
